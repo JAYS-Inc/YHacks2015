@@ -11,7 +11,8 @@
 	<!--Mapbox-->
     <script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.css' rel='stylesheet' />
-
+	<!--Firebase-->
+	<script src="https://cdn.firebase.com/js/client/2.3.1/firebase.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
 	<link rel="stylesheet" href="css/main.css">
 	
@@ -21,11 +22,6 @@
   type="text/javascript" charset="utf-8"></script>
   	<!--APPID: 2P8pqzI4ICSjwPzERSUb-->
   	<!--APPCODE: 6TennRi053M1ugmzkSSAVw-->
-
-  	<script src="js/base.js"></script>
-  	<script src="js/windowSetter.js"></script>
-	
-
 </head>
 
 <body>
@@ -49,7 +45,7 @@
 		// Once we've got a position, zoom and center the map
 		// on it, and add a single marker.
 		map.on('locationfound', function(e) {
-			console.log(e.latlng.lng + " " + e.latlng.lat);
+			// console.log(e.latlng.lng + " " + e.latlng.lat);
 		    map.fitBounds(e.bounds);
 		
 		    myLayer.setGeoJSON({
@@ -74,6 +70,8 @@
     </script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="scripts/base.js"></script>
+  	<script src="scripts/windowSetter.js"></script>
 </body>
 
 </html>
