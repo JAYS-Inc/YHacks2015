@@ -83,10 +83,10 @@
 
       };
 
-      function addMarker(longitude,latitude){
-        newCoords();
-        window.alert(longitude+" "+latitude)
-        L.marker([longitude, latitude]).addTo(map);
+      function addMarker(){
+        coords = newCoords();
+        //window.alert(coords[0]+" "+coords[1])
+        L.marker([coords[0], coords[1]]).addTo(map);
       };
 
       function newCoords(){
@@ -95,9 +95,7 @@
        return [longitude, latitude];
       };
 
-      coords = newCoords();
-
-      addMarker(coords[0],coords[1]);
+      addMarker();
 
  
     </script>
