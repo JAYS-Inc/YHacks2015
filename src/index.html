@@ -8,14 +8,14 @@
 	<meta name="viewport" content="initial-scale=1.0, width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, user-scalable=0" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<!--Mapbox-->
+    <script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.css' rel='stylesheet' />
 
-
-	<style type="text/css"></style>
-		<style src="css/main.css"></style>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
+	<link rel="stylesheet" href="css/main.css">
 	
-
-	<script type="text/javascript"></script>
-	<script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
+	<!--<script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
   type="text/javascript" charset="utf-8"></script>
 	<script src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
   type="text/javascript" charset="utf-8"></script>
@@ -28,36 +28,52 @@
 
 </head>
 
-<canvas>
-
-</canvas>
-
 <body>
-<h1>HERE</h1>
-<div style="width: 640px; height: 480px" id="mapContainer"></div>
-  
-  <script>
-    // Initialize the platform object:
-    var platform = new H.service.Platform({
-    'app_id': '2P8pqzI4ICSjwPzERSUb',
-    'app_code': '6TennRi053M1ugmzkSSAVw'
-    });
-
-    // Obtain the default map types from the platform object
-    var maptypes = platform.createDefaultLayers();
-
-    // Instantiate (and display) a map object:
-    var map = new H.Map(
-    document.getElementById('mapContainer'),
-    maptypes.normal.map,
-    {
-      zoom: 15,
-      center: { lng: -72.9267, lat: 41.3111 }
-    });
-}
+	<div style="width: 640px; height: 480px" id="mapContainer"></div>
+	<!--<div id="map" style="width:90%;height:200px;position:relative;overflow:hidden;margin: 0px auto;"></div>
+    <div id="map-push"></div>-->
+    <script>
+        L.mapbox.accessToken = 'pk.eyJ1IjoibWlnaHR5cmV2ZW5nZSIsImEiOiJjaWZmbTR3M2Y4bHQ1cnhrbm90bTIyNnQ5In0.lgVsXJk791nxlNuhV96RKQ';
+        var map = L.mapbox.map('mapContainer', 'mapbox.streets');
+        var myLayer = L.mapbox.featureLayer().addTo(map);
+        if (!navigator.geolocation) {
+		    console.log('Geolocation is not available');
+		} else {
+		   	function geoloc(){
+		        /*e.preventDefault();
+		        e.stopPropagation();*/
+		        map.locate();
+		    };
+		    geoloc();
+		}
+		// Once we've got a position, zoom and center the map
+		// on it, and add a single marker.
+		map.on('locationfound', function(e) {
+			console.log(e.latlng.lng + " " + e.latlng.lat);
+		    map.fitBounds(e.bounds);
+		
+		    myLayer.setGeoJSON({
+		        type: 'Feature',
+		        geometry: {
+		            type: 'Point',
+		            coordinates: [e.latlng.lng, e.latlng.lat]
+		        },
+		        properties: {
+		            'title': 'Here I am!',
+		            'marker-color': '#ff8888',
+		            'marker-symbol': 'star'
+		        }
+		    });
+		});
+		
+		// If the user chooses not to allow their location
+		// to be shared, display an error message.
+		map.on('locationerror', function() {
+		    console.log('Position could not be found');
+		});
     </script>
-	
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 </body>
 
 </html>
