@@ -9,19 +9,15 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 	<!--Mapbox-->
-    <script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.css' rel='stylesheet' />
+	<script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.js'></script>
+	<link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.css' rel='stylesheet' />
 	<!--Firebase-->
 	<script src="https://cdn.firebase.com/js/client/2.3.1/firebase.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
 	<link rel="stylesheet" href="css/main.css">
 	
-	<!--<script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
-  type="text/javascript" charset="utf-8"></script>
-	<script src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
-  type="text/javascript" charset="utf-8"></script>
-  	<!--APPID: 2P8pqzI4ICSjwPzERSUb-->
-  	<!--APPCODE: 6TennRi053M1ugmzkSSAVw-->
+	<script src="js/base.js"></script>
+	<script src="js/windowSetter.js"></script>
 </head>
 
 <body>
@@ -29,9 +25,12 @@
 	<!--<div id="map" style="width:90%;height:200px;position:relative;overflow:hidden;margin: 0px auto;"></div>
     <div id="map-push"></div>-->
     <script>
+
         L.mapbox.accessToken = 'pk.eyJ1IjoibWlnaHR5cmV2ZW5nZSIsImEiOiJjaWZmbTR3M2Y4bHQ1cnhrbm90bTIyNnQ5In0.lgVsXJk791nxlNuhV96RKQ';
-        var map = L.mapbox.map('mapContainer', 'mapbox.streets');
-        var myLayer = L.mapbox.featureLayer().addTo(map);
+        var map = L.mapbox.map('mapContainer', 'mapbox.streets'),
+            geocoder = L.mapbox.geocoder('mapbox.places'),
+            myLayer = L.mapbox.featureLayer().addTo(map),
+            reminders = L.mapbox.featureLayer().addTo(map);
         if (!navigator.geolocation) {
 		    console.log('Geolocation is not available');
 		} else {
@@ -44,8 +43,9 @@
 		}
 		// Once we've got a position, zoom and center the map
 		// on it, and add a single marker.
-		map.on('locationfound', function(e) {
-			// console.log(e.latlng.lng + " " + e.latlng.lat);
+		
+    function userLocation(){map.on('locationfound', function(e) {
+			console.log(e.latlng.lng + " " + e.latlng.lat);
 		    map.fitBounds(e.bounds);
 		
 		    myLayer.setGeoJSON({
@@ -55,23 +55,60 @@
 		            coordinates: [e.latlng.lng, e.latlng.lat]
 		        },
 		        properties: {
-		            'title': 'Here I am!',
+		            'title': 'I am here!',
 		            'marker-color': '#ff8888',
 		            'marker-symbol': 'star'
 		        }
 		    });
-		});
+		});};
 		
 		// If the user chooses not to allow their location
 		// to be shared, display an error message.
 		map.on('locationerror', function() {
 		    console.log('Position could not be found');
 		});
+
+    function render(layer,coords){
+      layer.setGeoJSON({
+      type: 'Feature',
+      geometry: {
+      type: 'Point',
+      coordinates: [coords.lng, coords.lat]
+      },
+      properties: {
+        'title': 'I want to be here!',
+        'marker-color': '#8888aa',
+        'marker-symbol': 'a'
+        }
+     });
+    };
+
+    function addMarker(){
+      
+      var addressQuery = prompt("Where would you like to set a reminder?");
+      return geocoder.query(addressQuery,geomapCoords)
+    };
+
+      function geomapCoords(err, data) {
+    if (data.lbounds) {
+      map.fitBounds(data.lbounds);
+      render(reminders,data.lbounds.getCenter());
+      return data.lbounds.getCenter();
+    } else if (data.latlng) {
+      window.alert("and here geomapCoords latlng");
+      map.fitBounds(data.lbounds);
+      render(reminders,data.latlng);
+      return data.latlng;
+    }
+}
+      userLocation();
+ 
     </script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 	<script src="scripts/base.js"></script>
   	<script src="scripts/windowSetter.js"></script>
+  <button onclick="addMarker()">Add Reminder</button>
 </body>
 
 </html>
