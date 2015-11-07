@@ -41,9 +41,10 @@
     <script>
 
         L.mapbox.accessToken = 'pk.eyJ1IjoibWlnaHR5cmV2ZW5nZSIsImEiOiJjaWZmbTR3M2Y4bHQ1cnhrbm90bTIyNnQ5In0.lgVsXJk791nxlNuhV96RKQ';
-        var map = L.mapbox.map('mapContainer', 'mapbox.streets');
-        var myLayer = L.mapbox.featureLayer().addTo(map);
-        var reminders = L.mapbox.featureLayer().addTo(map);
+        var map = L.mapbox.map('mapContainer', 'mapbox.streets'),
+            geocoder = L.mapbox.geocoder('mapbox.places'),
+            myLayer = L.mapbox.featureLayer().addTo(map),
+            reminders = L.mapbox.featureLayer().addTo(map);
         if (!navigator.geolocation) {
 		    console.log('Geolocation is not available');
 		} else {
@@ -80,32 +81,49 @@
 		    console.log('Position could not be found');
 		});
 
-      /*function render(layer){
+      function render(layer,coords){
             layer.setGeoJSON({
             type: 'Feature',
             geometry: {
                 type: 'Point',
-                coordinates: [e.latlng.lng, e.latlng.lat]
+                coordinates: [coords[0], coords[1]]
             },
             properties: {
-                'title': 'Here I am!',
+                'title': 'I want to be here!',
                 'marker-color': '#ff8888',
-                'marker-symbol': 'star'
+                'marker-symbol': 'a'
             }
         });
-      };*/
+      };
 
       function addMarker(){
         coords = newCoords();
         //window.alert(coords[0]+" "+coords[1])
-        L.marker([coords[0], coords[1]]).addTo(map);
+        //L.marker([coords[0], coords[1]]).addTo(map);
+        render(reminders,coords);
       };
 
+      //temporary, get coords frominputted address
       function newCoords(){
-       var longitude = parseFloat(prompt("longitude?"));
-       var latitude = parseFloat(prompt("latitude?"));
-       return [longitude, latitude];
+       //var longitude = parseFloat(prompt("longitude?"));
+       //var latitude = parseFloat(prompt("latitude?"));
+       //return [longitude, latitude];
+       var addressQuery = prompt("Where would you like to set a reminder?");
+       return geocoder.query(addressQuery,geomapCoords)
       };
+
+      function geomapCoords(err, data) {
+    // The geocoder can return an area, like a city, or a
+    // point, like an address. Here we handle both cases,
+    // by fitting the map bounds to an area or zooming to a point.
+    if (data.lbounds) {
+        map.fitBounds(data.lbounds);
+        window.alert("here");
+    } else if (data.latlng) {
+        window.alert("and here");
+        return[data.latlng[0], data.latlng[1]];
+    }
+}
 
       addMarker();
 
