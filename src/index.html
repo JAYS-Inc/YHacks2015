@@ -43,6 +43,7 @@
         L.mapbox.accessToken = 'pk.eyJ1IjoibWlnaHR5cmV2ZW5nZSIsImEiOiJjaWZmbTR3M2Y4bHQ1cnhrbm90bTIyNnQ5In0.lgVsXJk791nxlNuhV96RKQ';
         var map = L.mapbox.map('mapContainer', 'mapbox.streets');
         var myLayer = L.mapbox.featureLayer().addTo(map);
+        var reminders = L.mapbox.featureLayer().addTo(map);
         if (!navigator.geolocation) {
 		    console.log('Geolocation is not available');
 		} else {
@@ -79,9 +80,20 @@
 		    console.log('Position could not be found');
 		});
 
-      function render(){
-
-      };
+      /*function render(layer){
+            layer.setGeoJSON({
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [e.latlng.lng, e.latlng.lat]
+            },
+            properties: {
+                'title': 'Here I am!',
+                'marker-color': '#ff8888',
+                'marker-symbol': 'star'
+            }
+        });
+      };*/
 
       function addMarker(){
         coords = newCoords();
