@@ -8,7 +8,13 @@
 	<meta name="viewport" content="initial-scale=1.0, width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, user-scalable=0" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-	<!--Mapbox-->
+	
+  <style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+</style>
+
+  <!--Mapbox-->
     <script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.css' rel='stylesheet' />
 
@@ -33,6 +39,7 @@
 	<!--<div id="map" style="width:90%;height:200px;position:relative;overflow:hidden;margin: 0px auto;"></div>
     <div id="map-push"></div>-->
     <script>
+
         L.mapbox.accessToken = 'pk.eyJ1IjoibWlnaHR5cmV2ZW5nZSIsImEiOiJjaWZmbTR3M2Y4bHQ1cnhrbm90bTIyNnQ5In0.lgVsXJk791nxlNuhV96RKQ';
         var map = L.mapbox.map('mapContainer', 'mapbox.streets');
         var myLayer = L.mapbox.featureLayer().addTo(map);
@@ -71,6 +78,28 @@
 		map.on('locationerror', function() {
 		    console.log('Position could not be found');
 		});
+
+      function render(){
+
+      };
+
+      function addMarker(longitude,latitude){
+        newCoords();
+        window.alert(longitude+" "+latitude)
+        L.marker([longitude, latitude]).addTo(map);
+      };
+
+      function newCoords(){
+       var longitude = parseFloat(prompt("longitude?"));
+       var latitude = parseFloat(prompt("latitude?"));
+       return [longitude, latitude];
+      };
+
+      coords = newCoords();
+
+      addMarker(coords[0],coords[1]);
+
+ 
     </script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
