@@ -118,6 +118,7 @@
     // by fitting the map bounds to an area or zooming to a point.
     if (data.lbounds) {
         map.fitBounds(data.lbounds);
+        return data.lbounds.getCenter();
         window.alert("here");
     } else if (data.latlng) {
         window.alert("and here");
