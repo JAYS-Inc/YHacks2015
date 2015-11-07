@@ -14,22 +14,15 @@
   #map { position:absolute; top:0; bottom:0; width:100%; }
 </style>
 
-  <!--Mapbox-->
-    <script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.css' rel='stylesheet' />
+<!--Mapbox-->
+<script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.css' rel='stylesheet' />
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
-	<link rel="stylesheet" href="css/main.css">
-	
-	<!--<script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
-  type="text/javascript" charset="utf-8"></script>
-	<script src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
-  type="text/javascript" charset="utf-8"></script>
-  	<!--APPID: 2P8pqzI4ICSjwPzERSUb-->
-  	<!--APPCODE: 6TennRi053M1ugmzkSSAVw-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
+<link rel="stylesheet" href="css/main.css">
 
-  	<script src="js/base.js"></script>
-  	<script src="js/windowSetter.js"></script>
+<script src="js/base.js"></script>
+<script src="js/windowSetter.js"></script>
 	
 
 </head>
@@ -57,7 +50,8 @@
 		}
 		// Once we've got a position, zoom and center the map
 		// on it, and add a single marker.
-		map.on('locationfound', function(e) {
+		
+    function userLocation(){map.on('locationfound', function(e) {
 			console.log(e.latlng.lng + " " + e.latlng.lat);
 		    map.fitBounds(e.bounds);
 		
@@ -68,12 +62,12 @@
 		            coordinates: [e.latlng.lng, e.latlng.lat]
 		        },
 		        properties: {
-		            'title': 'Here I am!',
+		            'title': 'I am here!',
 		            'marker-color': '#ff8888',
 		            'marker-symbol': 'star'
 		        }
 		    });
-		});
+		});};
 		
 		// If the user chooses not to allow their location
 		// to be shared, display an error message.
@@ -81,57 +75,46 @@
 		    console.log('Position could not be found');
 		});
 
-      function render(layer,coords){
-            layer.setGeoJSON({
-            type: 'Feature',
-            geometry: {
-                type: 'Point',
-                coordinates: [coords[0], coords[1]]
-            },
-            properties: {
-                'title': 'I want to be here!',
-                'marker-color': '#ff8888',
-                'marker-symbol': 'a'
-            }
-        });
-      };
+    function render(layer,coords){
+      layer.setGeoJSON({
+      type: 'Feature',
+      geometry: {
+      type: 'Point',
+      coordinates: [coords.lng, coords.lat]
+      },
+      properties: {
+        'title': 'I want to be here!',
+        'marker-color': '#ff88aa',
+        'marker-symbol': 'a'
+        }
+     });
+    };
 
-      function addMarker(){
-        coords = newCoords();
-        //window.alert(coords[0]+" "+coords[1])
-        //L.marker([coords[0], coords[1]]).addTo(map);
-        render(reminders,coords);
-      };
-
-      //temporary, get coords frominputted address
-      function newCoords(){
-       //var longitude = parseFloat(prompt("longitude?"));
-       //var latitude = parseFloat(prompt("latitude?"));
-       //return [longitude, latitude];
-       var addressQuery = prompt("Where would you like to set a reminder?");
-       return geocoder.query(addressQuery,geomapCoords)
-      };
+    function addMarker(){
+      var addressQuery = prompt("Where would you like to set a reminder?");
+      return geocoder.query(addressQuery,geomapCoords)
+    };
 
       function geomapCoords(err, data) {
-    // The geocoder can return an area, like a city, or a
-    // point, like an address. Here we handle both cases,
-    // by fitting the map bounds to an area or zooming to a point.
     if (data.lbounds) {
-        map.fitBounds(data.lbounds);
-        return data.lbounds.getCenter();
-        window.alert("here");
+      map.fitBounds(data.lbounds);
+      render(reminders,data.lbounds.getCenter());
+      return data.lbounds.getCenter();
     } else if (data.latlng) {
-        window.alert("and here");
-        return[data.latlng[0], data.latlng[1]];
+      window.alert("and here geomapCoords latlng");
+      map.fitBounds(data.lbounds);
+      render(reminders,data.latlng);
+      return data.latlng;
     }
 }
-
-      addMarker();
-
+      userLocation();
  
     </script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+  <button onclick="addMarker()">Add Reminder</button>
+
 </body>
 
 </html>
