@@ -84,13 +84,14 @@
       },
       properties: {
         'title': 'I want to be here!',
-        'marker-color': '#ff88aa',
+        'marker-color': '#8888aa',
         'marker-symbol': 'a'
         }
      });
     };
 
     function addMarker(){
+      
       var addressQuery = prompt("Where would you like to set a reminder?");
       return geocoder.query(addressQuery,geomapCoords)
     };
@@ -114,6 +115,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
   <button onclick="addMarker()">Add Reminder</button>
+
 
 </body>
 
