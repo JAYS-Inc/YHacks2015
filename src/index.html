@@ -34,6 +34,7 @@
 	<!-- Main Style Sheet CSS -->
 	<link rel="stylesheet" href="css/style.css" >
 
+<<<<<<< HEAD
 	<!-- Load local jQuery -->
     <script src="libs/jquery-loader.js"></script>
 
@@ -56,6 +57,12 @@
         animation: none;
       }
     </style>
+=======
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="scripts/bootstrap.js"></script>
+  <script src="scripts/base.js"></script>
+>>>>>>> 9fc291037abc161c0426ba25956cd753bba2fa8c
 
 
 </head>
@@ -215,6 +222,7 @@
 
 <!-- MAIN CONTENT -->
 
+<<<<<<< HEAD
 <script type="text/javascript">
 	$("#messageButton").on("click", function(e) {
 	
@@ -246,6 +254,8 @@
 
 
 
+=======
+>>>>>>> 9fc291037abc161c0426ba25956cd753bba2fa8c
 <script>
 function render(layer,coords,targetJSON){
  	targetLayer = layer.setGeoJSON({
@@ -290,6 +300,39 @@ function distBetween(point1,point2){
   console.log("here2");
   return point1.distanceTo(point2);
 };
+<<<<<<< HEAD
+
+function distFromUser(point){
+  console.log("here");
+  return distBetween(userGeoJSON.loc,point);
+}
+
+function checkToAlert(point){
+  var dist = distBetween(userGeoJSON.loc,point);
+  if(userGeoJSON.distanceToAlert<=dist){
+    alert();
+  }
+};
+
+function alert(){
+  window.alert("You are "+userGeoJSON.distanceToAlert.toFixed(0)+"m or less away from your destination.");
+};
+
+function test(){
+
+};
+
+function init(){
+  userLocation();
+  while(target.loc!=null){
+    setInterval(userLocation(),500);
+    setInterval(checkToAlert(target.loc),500);
+  };
+};
+
+init();
+=======
+>>>>>>> 9fc291037abc161c0426ba25956cd753bba2fa8c
 
 function distFromUser(point){
   console.log("here");
@@ -323,7 +366,7 @@ init();
 
 </script>
 
-
+<!--<button onclick="test()">TEST</button>-->
 
 </body>
 </html>
