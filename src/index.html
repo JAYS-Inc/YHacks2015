@@ -56,11 +56,20 @@
 
 			<div class="col-md-3 l-content">
 				<div class="profile-pic">
-					<div class="pic-bg"><img src="assets/profile-avatar.png" class="img-responsive" alt=""/></div>
-
+					<div class="pic-bg">
+						<img src="assets/profile-avatar.png" class="img-responsive" alt=""/></div>
+				</div>
+				<!-- PUT BUTTON HERE -->
+				<div class="add_new">
+					<button onclick="addMarker()">Add Reminder</button>
 				</div>
 				<nav>
 					<!-- PUT REMINDERS HERE -->
+
+
+
+
+
 				</nav>
 			</div>
 
@@ -73,7 +82,11 @@
 								<script>
 								        L.mapbox.accessToken = 'pk.eyJ1IjoibWlnaHR5cmV2ZW5nZSIsImEiOiJjaWZmbTR3M2Y4bHQ1cnhrbm90bTIyNnQ5In0.lgVsXJk791nxlNuhV96RKQ';
 								        var map = L.mapbox.map('1', 'mapbox.streets');
+                        				var geocoder = L.mapbox.geocoder('mapbox.places');
+                       					 var reminders = L.mapbox.featureLayer().addTo(map);
 								        var myLayer = L.mapbox.featureLayer().addTo(map);
+                        				//var userGeoJSON = alarmAddHelper({user:"demo",stat:true,loc: null,start:"9:00am",end:"2:00pm",days:"Monday,Tuesday",rep:false});
+
 								        if (!navigator.geolocation) {
 										    console.log('Geolocation is not available');
 										} else {
@@ -183,8 +196,6 @@ userLocation();
 
 </script>
 
-<!-- Josh's button -->
-<button onclick="addMarker()">Add Reminder</button>
 
 
 </body>

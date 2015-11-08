@@ -58,6 +58,31 @@ a:hover {
 	position: relative;
 }
 
+.add_new {
+	background: #f1f1f1;
+	height: 60px;
+	position: relative;
+
+	text-align: center;
+	vertical-align: middle;
+
+}
+.add_new button {
+	margin-top: 10px;
+	width: 120px;
+	height: 40px;
+	background: #ffd42d;
+	border-radius: 4px;
+	font-size: 13px;
+	color: #4e503b;
+	border: none;
+}
+
+.add_new button:hover {
+	background: #222;
+	color: #ffd42d;
+}
+
 .pic-bg {
 	background: url(../assets/pic-bg.png) no-repeat;
 	width: 140px;
@@ -71,6 +96,10 @@ a:hover {
 	margin: auto;
 	vertical-align: middle;
 	padding: 10px;
+}
+
+.button-bg {
+
 }
 
 .navigation {
