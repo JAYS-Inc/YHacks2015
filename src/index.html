@@ -34,6 +34,29 @@
 	<!-- Main Style Sheet CSS -->
 	<link rel="stylesheet" href="css/style.css" >
 
+	<!-- Load local jQuery -->
+    <script src="libs/jquery-loader.js"></script>
+
+    <!-- checker -->
+    <script src="scripts/check.js"></script>
+
+
+	<!-- ReModal CSS and JS -->
+
+	<link rel="stylesheet" href="css/remodal.css">
+    <link rel="stylesheet" href="css/remodal-default-theme.css">
+    <script src="scripts/remodal.js"></script>
+    <style>
+      .remodal-overlay.without-animation.remodal-is-opening,
+      .remodal-overlay.without-animation.remodal-is-closing,
+      .remodal.without-animation.remodal-is-opening,
+      .remodal.without-animation.remodal-is-closing,
+      .remodal-bg.without-animation.remodal-is-opening,
+      .remodal-bg.without-animation.remodal-is-closing {
+        animation: none;
+      }
+    </style>
+
 
 </head>
 <body>
@@ -53,6 +76,11 @@
 		<div class="row" style="background:white";> 
 
 			<!-- LEFT SECTION -->
+			<div class="singleReminderTemplate" id="singleReminder">
+						<p id = "remindT"></p>
+
+
+			</div> 
 
 			<div class="col-md-3 l-content">
 				<div class="profile-pic">
@@ -61,16 +89,42 @@
 				</div>
 				<!-- PUT BUTTON HERE -->
 				<div class="add_new">
-					<button onclick="addMarker()">Add Reminder</button>
+					<button href="#" data-remodal-target="modal">Add Reminder</button>
 				</div>
-				<nav>
+
+				<div class="remodal" data-remodal-id="modal">
+					<div class="reminder_form">
+						<h4>Setup a Reminder <br> </h4>
+						<form id="reminderForm" method="post" >
+									<input type="text" name="reminderTitle" id="reminderTitle" placeholder="Title of Reminder" required>
+									<input type="text" name="reminderLocation" id="reminderLocation" placeholder="Location" required>
+									<input type="text" name="distance" id="distance" placeholder="Distance(km)" required>
+									<!-- Button -->
+									<button id= "messageButton">Send Message</button>
+						</form>
+						<input type = "text" id = "txtOutput" />
+						<div id="successMessage" class="successmessage">
+							<p><span class="success-ico"></span> Your reminder has been added.</p>
+						</div>
+						<div id="failureMessage" class="errormessage">
+							<p><span class="error-ico"></span> There was a problem with entering your reminder. Please try again.</p>
+						</div>
+					</div>
+
+					  <a data-remodal-action="close" class="remodal-close"></a>
+
+					  <a data-remodal-action="cancel" class="remodal-cancel" href="#">Close</a>
+				</div>
+				<div class="remindersList" id="remindersList">
+					
+
 					<!-- PUT REMINDERS HERE -->
 
 
 
 
 
-				</nav>
+				</div>
 			</div>
 
 
@@ -82,10 +136,13 @@
 								<script>
 								        L.mapbox.accessToken = 'pk.eyJ1IjoibWlnaHR5cmV2ZW5nZSIsImEiOiJjaWZmbTR3M2Y4bHQ1cnhrbm90bTIyNnQ5In0.lgVsXJk791nxlNuhV96RKQ';
 								        var map = L.mapbox.map('1', 'mapbox.streets');
-                        				var geocoder = L.mapbox.geocoder('mapbox.places');
-                       					 var reminders = L.mapbox.featureLayer().addTo(map);
+                        var geocoder = L.mapbox.geocoder('mapbox.places');
+                       	var reminders = L.mapbox.featureLayer().addTo(map);
 								        var myLayer = L.mapbox.featureLayer().addTo(map);
-                        				//var userGeoJSON = alarmAddHelper({user:"demo",stat:true,loc: null,start:"9:00am",end:"2:00pm",days:"Monday,Tuesday",rep:false});
+                        var userGeoJSON = {user:"demo",stat:true,loc:[0,0],distanceToAlert:0,start:"9:00am",end:"2:00pm",days:"Monday,Tuesday",rep:false};
+//alarmAddHelper()
+                        var toSendGeoJSON = {user:"demo",stat:true,loc:null,distanceToAlert:0,start:null,end:null,days:null,rep:false};
+                        target = toSendGeoJSON;
 
 								        if (!navigator.geolocation) {
 										    console.log('Geolocation is not available');
@@ -105,7 +162,7 @@
 												console.log(e.latlng.lng + " " + e.latlng.lat);
 											    map.fitBounds(e.bounds);
 											
-											    myLayer.setGeoJSON({
+											    layerGeoJSON = myLayer.setGeoJSON({
 											        type: 'Feature',
 											        geometry: {
 											            type: 'Point',
@@ -117,6 +174,8 @@
 											            'marker-symbol': 'star'
 											        }
 											    });
+
+                          userGeoJSON.loc = layerGeoJSON._geojson.geometry.coordinates;
 											});
 										};
 										
@@ -151,16 +210,45 @@
 		</div>
 	</div>
 </div>
+
+
+
 <!-- MAIN CONTENT -->
+
+<script type="text/javascript">
+	$("#messageButton").on("click", function(e) {
+	
+	  	e.preventDefault();
+	  var reminderTitle = $("#reminderTitle").val();
+	  var reminderLocation = $("#reminderLocation").val();
+	  var distance = $("#distance").val();
+	  txtOutput.value = reminderTitle + " is set at " + reminderLocation + " by " + distance + "km";
+	  	$("#singleReminder").clone().appendTo(".remindersList");
+	    $(".remindersList").find("#singleReminder").attr('id',reminderTitle);
+	    $("#"+reminderTitle).show();
+	    $("#"+reminderTitle+" #remindT").html("Title: " + reminderTitle + " Distance " + distance + "<br> Location: " + reminderLocation);
+
+	     $('#reminderTitle').val( "" );
+   		 $('#reminderLocation').val( "" );
+    	 $('#distance').val( "" );
+
+    	 setTargetDistance(distance,target);
+	return geocoder.query(reminderLocation,geomapCoords)
+ 	  
+});
+
+</script>
 
 <!-- JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="scripts/bootstrap.js"></script>
 <script src="scripts/base.js"></script>
 
+
+
 <script>
-function render(layer,coords){
- 	layer.setGeoJSON({
+function render(layer,coords,targetJSON){
+ 	targetLayer = layer.setGeoJSON({
 	        type: 'Feature',
 	        geometry: {
 		      type: 'Point',
@@ -172,27 +260,66 @@ function render(layer,coords){
 		      'marker-symbol': 'a'
 		    }
 	});
+  targetJSON.loc = targetLayer._geojson.geometry.coordinates;
 };
 
 function addMarker(){
 	var addressQuery = prompt("Where would you like to set a reminder?");
+  var targetDistance = prompt("How far away would you like to be notified?");
+  setTargetDistance(targetDistance,target);
 	return geocoder.query(addressQuery,geomapCoords)
 };
+
+function setTargetDistance(distance,targetJSON){
+  targetJSON.distanceToAlert = distance;
+}
 
 function geomapCoords(err, data) {
     if (data.lbounds) {
       map.fitBounds(data.lbounds);
-      render(reminders,data.lbounds.getCenter());
+      render(reminders,data.lbounds.getCenter(),target);
       return data.lbounds.getCenter();
     } else if (data.latlng) {
-      window.alert("and here geomapCoords latlng");
       map.fitBounds(data.lbounds);
-      render(reminders,data.latlng);
+      render(reminders,data.latlng,target);
       return data.latlng;
     }
 }
 
-userLocation();
+function distBetween(point1,point2){
+  console.log("here2");
+  return point1.distanceTo(point2);
+};
+
+function distFromUser(point){
+  console.log("here");
+  return distBetween(userGeoJSON.loc,point);
+}
+
+function checkToAlert(point){
+  var dist = distBetween(userGeoJSON.loc,point);
+  if(userGeoJSON.distanceToAlert<=dist){
+    alert();
+  }
+};
+
+function alert(){
+  window.alert("You are "+userGeoJSON.distanceToAlert.toFixed(0)+"m or less away from your destination.");
+};
+
+function test(){
+
+};
+
+function init(){
+  userLocation();
+  while(target.loc!=null){
+    setInterval(userLocation(),500);
+    setInterval(checkToAlert(target.loc),500);
+  };
+};
+
+init();
 
 </script>
 
