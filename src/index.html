@@ -34,6 +34,11 @@
 	<!-- Main Style Sheet CSS -->
 	<link rel="stylesheet" href="css/style.css" >
 
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="scripts/bootstrap.js"></script>
+  <script src="scripts/base.js"></script>
+
 
 </head>
 <body>
@@ -82,10 +87,13 @@
 								<script>
 								        L.mapbox.accessToken = 'pk.eyJ1IjoibWlnaHR5cmV2ZW5nZSIsImEiOiJjaWZmbTR3M2Y4bHQ1cnhrbm90bTIyNnQ5In0.lgVsXJk791nxlNuhV96RKQ';
 								        var map = L.mapbox.map('1', 'mapbox.streets');
-                        				var geocoder = L.mapbox.geocoder('mapbox.places');
-                       					 var reminders = L.mapbox.featureLayer().addTo(map);
+                        var geocoder = L.mapbox.geocoder('mapbox.places');
+                       	var reminders = L.mapbox.featureLayer().addTo(map);
 								        var myLayer = L.mapbox.featureLayer().addTo(map);
-                        				//var userGeoJSON = alarmAddHelper({user:"demo",stat:true,loc: null,start:"9:00am",end:"2:00pm",days:"Monday,Tuesday",rep:false});
+                        var userGeoJSON = {user:"demo",stat:true,loc:[0,0],distanceToAlert:0,start:"9:00am",end:"2:00pm",days:"Monday,Tuesday",rep:false};
+//alarmAddHelper()
+                        var toSendGeoJSON = {user:"demo",stat:true,loc:null,distanceToAlert:0,start:null,end:null,days:null,rep:false};
+                        target = toSendGeoJSON;
 
 								        if (!navigator.geolocation) {
 										    console.log('Geolocation is not available');
@@ -105,7 +113,7 @@
 												console.log(e.latlng.lng + " " + e.latlng.lat);
 											    map.fitBounds(e.bounds);
 											
-											    myLayer.setGeoJSON({
+											    layerGeoJSON = myLayer.setGeoJSON({
 											        type: 'Feature',
 											        geometry: {
 											            type: 'Point',
@@ -117,6 +125,8 @@
 											            'marker-symbol': 'star'
 											        }
 											    });
+
+                          userGeoJSON.loc = layerGeoJSON._geojson.geometry.coordinates;
 											});
 										};
 										
@@ -153,14 +163,9 @@
 </div>
 <!-- MAIN CONTENT -->
 
-<!-- JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="scripts/bootstrap.js"></script>
-<script src="scripts/base.js"></script>
-
 <script>
-function render(layer,coords){
- 	layer.setGeoJSON({
+function render(layer,coords,targetJSON){
+ 	targetLayer = layer.setGeoJSON({
 	        type: 'Feature',
 	        geometry: {
 		      type: 'Point',
@@ -172,31 +177,70 @@ function render(layer,coords){
 		      'marker-symbol': 'a'
 		    }
 	});
+  targetJSON.loc = targetLayer._geojson.geometry.coordinates;
 };
 
 function addMarker(){
 	var addressQuery = prompt("Where would you like to set a reminder?");
+  var targetDistance = prompt("How far away would you like to be notified?");
+  setTargetDistance(targetDistance,target);
 	return geocoder.query(addressQuery,geomapCoords)
 };
+
+function setTargetDistance(distance,targetJSON){
+  targetJSON.distanceToAlert = distance;
+}
 
 function geomapCoords(err, data) {
     if (data.lbounds) {
       map.fitBounds(data.lbounds);
-      render(reminders,data.lbounds.getCenter());
+      render(reminders,data.lbounds.getCenter(),target);
       return data.lbounds.getCenter();
     } else if (data.latlng) {
-      window.alert("and here geomapCoords latlng");
       map.fitBounds(data.lbounds);
-      render(reminders,data.latlng);
+      render(reminders,data.latlng,target);
       return data.latlng;
     }
 }
 
-userLocation();
+function distBetween(point1,point2){
+  console.log("here2");
+  return point1.distanceTo(point2);
+};
+
+function distFromUser(point){
+  console.log("here");
+  return distBetween(userGeoJSON.loc,point);
+}
+
+function checkToAlert(point){
+  var dist = distBetween(userGeoJSON.loc,point);
+  if(userGeoJSON.distanceToAlert<=dist){
+    alert();
+  }
+};
+
+function alert(){
+  window.alert("You are "+userGeoJSON.distanceToAlert.toFixed(0)+"m or less away from your destination.");
+};
+
+function test(){
+
+};
+
+function init(){
+  userLocation();
+  while(target.loc!=null){
+    setInterval(userLocation(),500);
+    setInterval(checkToAlert(target.loc),500);
+  };
+};
+
+init();
 
 </script>
 
-
+<!--<button onclick="test()">TEST</button>-->
 
 </body>
 </html>
