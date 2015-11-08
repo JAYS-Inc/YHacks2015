@@ -1,95 +1,172 @@
-<!DOCTYPE HTML>
-<html lang="en">
-
+<!DOCTYPE html>
+<html>
 <head>
-	<meta charset="UTF-8">
-	<meta content="GeoTracker Alarm"/>
-	<meta name="description" content="GeoTracker Alarm">
-	<meta name="viewport" content="initial-scale=1.0, width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, user-scalable=0" />
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-	<!--Mapbox-->
+
+	<!-- Meta -->
+	<meta charset="utf-8">
+	<meta name="keywords" content="GeoAlarm" />
+	<meta name="description" content="GeoAlarm">
+	<meta name="author" content="">
+
+	<title> GUI for GeoThing</title>
+
+	<!-- Mobile Meta -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- MapBox API -->
 	<script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.js'></script>
-	<link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.css' rel='stylesheet' />
+    <link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.css' rel='stylesheet' />
+
 	<!--Firebase-->
 	<script src="https://cdn.firebase.com/js/client/2.3.1/firebase.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
 	<link rel="stylesheet" href="css/main.css">
-	
-	<script src="js/base.js"></script>
-	<script src="js/windowSetter.js"></script>
+
+	<!-- Google Webfonts -->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,600,700,800,700italic,600italic' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Neuton:400,200,300' rel='stylesheet' type='text/css'>
+
+	<!-- Bootstrap Core CSS -->
+	<link href="css/bootstrap.css" rel="stylesheet"> 
+
+	<!-- Theme Styles CSS-->
+	<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+	<!-- Main Style Sheet CSS -->
+	<link rel="stylesheet" href="css/style.css" >
+
+
 </head>
-
 <body>
-	<div style="width: 640px; height: 480px" id="mapContainer"></div>
-	<!--<div id="map" style="width:90%;height:200px;position:relative;overflow:hidden;margin: 0px auto;"></div>
-    <div id="map-push"></div>-->
-    <script>
 
-        L.mapbox.accessToken = 'pk.eyJ1IjoibWlnaHR5cmV2ZW5nZSIsImEiOiJjaWZmbTR3M2Y4bHQ1cnhrbm90bTIyNnQ5In0.lgVsXJk791nxlNuhV96RKQ';
-        var map = L.mapbox.map('mapContainer', 'mapbox.streets'),
-            geocoder = L.mapbox.geocoder('mapbox.places'),
-            myLayer = L.mapbox.featureLayer().addTo(map),
-            reminders = L.mapbox.featureLayer().addTo(map);
-        if (!navigator.geolocation) {
-		    console.log('Geolocation is not available');
-		} else {
-		   	function geoloc(){
-		        /*e.preventDefault();
-		        e.stopPropagation();*/
-		        map.locate();
-		    };
-		    geoloc();
-		}
-		// Once we've got a position, zoom and center the map
-		// on it, and add a single marker.
-		
-    function userLocation(){map.on('locationfound', function(e) {
-			console.log(e.latlng.lng + " " + e.latlng.lat);
-		    map.fitBounds(e.bounds);
-		
-		    myLayer.setGeoJSON({
-		        type: 'Feature',
-		        geometry: {
-		            type: 'Point',
-		            coordinates: [e.latlng.lng, e.latlng.lat]
-		        },
-		        properties: {
-		            'title': 'I am here!',
-		            'marker-color': '#ff8888',
-		            'marker-symbol': 'star'
-		        }
-		    });
-		});};
-		
-		// If the user chooses not to allow their location
-		// to be shared, display an error message.
-		map.on('locationerror', function() {
-		    console.log('Position could not be found');
-		});
+<!-- LOADING MASK -->
+<div id="mask">   
+    <div class="loader">
+        <img src="assets/loading.gif" alt='loading'>
+    </div>
+</div>
 
-    function render(layer,coords){
-      layer.setGeoJSON({
-      type: 'Feature',
-      geometry: {
-      type: 'Point',
-      coordinates: [coords.lng, coords.lat]
-      },
-      properties: {
-        'title': 'I want to be here!',
-        'marker-color': '#8888aa',
-        'marker-symbol': 'a'
-        }
-     });
-    };
+<!-- MAIN CONTENT -->
+<div class="main-content">
+	<div class="container no-padding">
 
-    function addMarker(){
-      
-      var addressQuery = prompt("Where would you like to set a reminder?");
-      return geocoder.query(addressQuery,geomapCoords)
-    };
 
-      function geomapCoords(err, data) {
+		<div class="row" style="background:white";> 
+
+			<!-- LEFT SECTION -->
+
+			<div class="col-md-3 l-content">
+				<div class="profile-pic">
+					<div class="pic-bg"><img src="assets/profile-avatar.png" class="img-responsive" alt=""/></div>
+				</div>
+				<nav>
+					<!-- PUT REMINDERS HERE -->
+				</nav>
+			</div>
+
+
+			<!-- RIGHT SECTION -->
+			<div class="col-md-9 r-content">
+				<div class="flexslider">
+					<div class="slides">
+							<div class="profile" id="1" style="width: 731px; height: 480px">
+								<script>
+								        L.mapbox.accessToken = 'pk.eyJ1IjoibWlnaHR5cmV2ZW5nZSIsImEiOiJjaWZmbTR3M2Y4bHQ1cnhrbm90bTIyNnQ5In0.lgVsXJk791nxlNuhV96RKQ';
+								        var map = L.mapbox.map('1', 'mapbox.streets');
+								        var myLayer = L.mapbox.featureLayer().addTo(map);
+								        if (!navigator.geolocation) {
+										    console.log('Geolocation is not available');
+										} else {
+										   	function geoloc(){
+										        /*e.preventDefault();
+										        e.stopPropagation();*/
+										        map.locate();
+										    };
+										    geoloc();
+										}
+										// Once we've got a position, zoom and center the map
+										// on it, and add a single marker.
+										map.on('locationfound', function(e) {
+											console.log(e.latlng.lng + " " + e.latlng.lat);
+										    map.fitBounds(e.bounds);
+										
+										    myLayer.setGeoJSON({
+										        type: 'Feature',
+										        geometry: {
+										            type: 'Point',
+										            coordinates: [e.latlng.lng, e.latlng.lat]
+										        },
+										        properties: {
+										            'title': 'Here I am!',
+										            'marker-color': '#ff8888',
+										            'marker-symbol': 'star'
+										        }
+										    });
+										});
+										
+										// If the user chooses not to allow their location
+										// to be shared, display an error message.
+										map.on('locationerror', function() {
+										    console.log('Position could not be found');
+										});
+								</script>
+								<div class="add_new" style="width: 731px; height: 480px" id = 'add_new' >
+									<img src="assets/new.png" alt="add_new" style="width:304px;height:228px;">
+								</div>
+							</div>
+						<!-- SECTION -->
+					</div>
+				</div>
+
+				<!-- FOOTER -->
+				<footer>
+					<div class="row">
+						<div class="col-md-7">
+							<p>&copy; The JAYS Group</p>
+						</div>
+						<div class="col-md-5">
+							<ul class="social">
+								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+								<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+								<li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+								<li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+							</ul>
+						</div>
+					</div>
+				</footer>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- MAIN CONTENT -->
+
+<!-- JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="scripts/bootstrap.js"></script>
+<script src="scripts/base.js"></script>
+
+<script>
+function render(layer,coords){
+ 	layer.setGeoJSON({
+	        type: 'Feature',
+	        geometry: {
+		      type: 'Point',
+		      coordinates: [coords.lng, coords.lat]
+		    },
+		    properties: {
+		      'title': 'I want to be here!',
+		      'marker-color': '#8888aa',
+		      'marker-symbol': 'a'
+		    }
+	});
+};
+
+function addMarker(){
+	var addressQuery = prompt("Where would you like to set a reminder?");
+	return geocoder.query(addressQuery,geomapCoords)
+};
+
+function geomapCoords(err, data) {
     if (data.lbounds) {
       map.fitBounds(data.lbounds);
       render(reminders,data.lbounds.getCenter());
@@ -101,14 +178,14 @@
       return data.latlng;
     }
 }
-      userLocation();
- 
-    </script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-	<script src="scripts/base.js"></script>
-  	<script src="scripts/windowSetter.js"></script>
-  <button onclick="addMarker()">Add Reminder</button>
+userLocation();
+
+</script>
+
+<!-- Josh's button -->
+<button onclick="addMarker()">Add Reminder</button>
+
+
 </body>
-
 </html>

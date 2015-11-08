@@ -35,6 +35,15 @@ $(document).ready(function() {
     var id = alarmAddHelper({user:"demo",stat:true,loc:"Yale University",start:"9:00am",end:"2:00pm",days:"Monday,Tuesday",rep:false});
     alarmDelete("-","users/demo/");
 });
+
+/* Loading Script */
+$(window).load(function() {
+  "use strict";
+      $(".loader").delay(500).fadeOut();
+      $("#mask").delay(1000).fadeOut("slow");
+});
+
+
 /*
 var myFirebaseRef = new Firebase("https://geoalarm.firebaseio.com/");
 myFirebaseRef.set({
